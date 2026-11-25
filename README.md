@@ -1,15 +1,61 @@
-# Graduation-Project-1
-Bioinformatics를 활용한 COVID-19 염기서열 데이터 분석 및 응용
+# COVID-19 염기서열 분석
 
-## complete_list_alignment.ipynb 사용법
+공개 염기서열 데이터를 수집하고, 여러 서열을 정렬해 비교하는 과정을 구현한 학부 졸업 프로젝트입니다.
 
-1. covid.fasta 파일에 바이러스 염기서열을 모두 써준다.
-2. number만큼 genbank_id를 입력하고 저장한다.
-3. txt파일내에 있는 genbank_id에 해당하는 유전자의 염기서열을 covid.fasta 파일에  작성한다.
-4. sequence alignment 후 aln 파일을 covid.aln이라는 이름으로 저장한다.
+이 저장소는 **데이터 수집·서열 정렬 노트북**을 중심으로 구성되어 있습니다. 팀의 분석 결과와 웹페이지 코드는 [별도 저장소](https://github.com/gudals7856/graduationProject)에서 볼 수 있습니다.
 
-원하는 fasta 파일들의 multiple sequence alignment가 완료된 후 그 결과가 covid.aln파일에 저장되어 생성된다.
+## 주요 작업
 
->다른 염기서열 데이터를 alignment하고 싶은 경우 ncbi에서 관리하는 염기서열 데이터의 네임 코드를 직접 입력하면 된다.
+- **데이터 수집**: GenBank 식별자로 NCBI의 염기서열 조회
+- **데이터 정리**: 조회한 서열을 FASTA 파일로 저장
+- **다중 서열 정렬**: 통합 노트북의 ClustalW2 정렬과 별도 MUSCLE 실험
+- **결과 확인**: 정렬 파일을 읽고 ClustalW의 가이드 트리(Newick)를 텍스트로 표시
 
-Link: [분석 결과 + 웹페이지](https://github.com/gudals7856/graduationProject)
+## 분석 흐름
+
+```text
+GenBank 식별자 입력
+    ↓ NCBI 조회
+covid.fasta
+    ↓ ClustalW2 정렬
+covid.aln · covid.dnd
+    ↓
+정렬 결과 · 가이드 트리 확인
+```
+
+## 주요 파일
+
+| 파일 | 역할 |
+| --- | --- |
+| [통합 분석 노트북](covid19/complete_list_alignment.ipynb) | 식별자 입력, 서열 수집, 정렬 및 결과 확인 |
+| [목록 처리 노트북](covid19/list_alignment.ipynb) | 식별자 입력·서열 수집 후 MUSCLE 실행 |
+| [MUSCLE 노트북](covid19/muscle_oper.ipynb) | 준비된 FASTA 파일의 정렬 실험 |
+| [보조 스크립트](covid19/src/) | 개별 서열 수집·저장, 정렬 실행, 형식 변환, 트리 표시 실험 |
+
+<details>
+<summary>환경 준비와 실행 순서</summary>
+
+### 사용 도구
+
+Python, Jupyter Notebook, Biopython, pandas, ClustalW2를 사용하며 별도 노트북은 MUSCLE을 사용합니다. 패키지 버전은 저장소에 고정되어 있지 않아, 재현할 환경에서 노트북의 API 호환성을 확인해야 합니다.
+
+### 실행 순서
+
+1. 별도 작업 폴더에 `covid19/`의 노트북과 필요한 파일을 준비합니다.
+2. `complete_list_alignment.ipynb`를 열고 NCBI Entrez의 이메일 설정을 본인 정보로 지정합니다.
+3. `clustalw_exe`를 설치한 ClustalW2 실행 파일 경로로 수정합니다.
+4. 분석할 서열의 수와 GenBank 식별자를 입력하고 데이터 수집 셀을 실행합니다.
+5. 정렬 셀을 실행한 뒤 `covid.aln`과 `covid.dnd` 결과를 확인합니다.
+
+노트북은 `covidlist.txt`와 `covid.fasta`에 데이터를 추가하는 방식입니다. 반복 실행 시 기존 데이터가 중복되지 않도록 이전 결과를 보관하고 새 작업 파일로 시작합니다.
+
+### 보조 실험 코드의 상태
+
+위 실행 순서는 통합 노트북 기준입니다. 보조 파일은 개별 실험 코드입니다. `src/run_muscle.py`는 Windows 경로 문자열 수정이, `src/clustal_to_fasta.py`와 `Untitled.ipynb`는 `seq_dict` 초기화가 필요합니다.
+
+</details>
+
+## 관련 자료
+
+- [팀의 분석 결과와 웹페이지](https://github.com/gudals7856/graduationProject)
+- [기존 사용 안내](https://github.com/ksmlucky/Graduation-Project-1/blob/1b31511157438de30b3257b63c8fa17d423c6b25/README.md)
